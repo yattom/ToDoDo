@@ -1,5 +1,7 @@
 package jp.yattom.tododo.e2e;
 
+import jp.yattom.tododo.monitor.Status;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,9 +17,11 @@ public class HappyPathTests {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    @Test
-    public void greetingShouldReturnDefaultMessage() throws Exception {
-        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/",
-                String.class)).contains("Hello, World");
+    @Nested
+    public class アプリ死活監視 {
+        @Test
+        public void 生きている() throws Exception {
+            assertThat(restTemplate.getForObject("http://localhost:" + port + "/monitor", Status.class).isAlive()).isTrue();
+        }
     }
 }
