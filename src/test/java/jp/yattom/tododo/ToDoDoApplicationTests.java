@@ -6,12 +6,14 @@ import jp.yattom.tododo.todo.ToDoService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
 @SpringBootTest
+@Transactional
 class ToDoDoApplicationTests {
 
 	@Test
@@ -27,7 +29,6 @@ class ToDoDoApplicationTests {
 	@Test
 	public void ToDoを書き込む() {
 		// 準備
-		repo.deleteAll();
 		ToDo toDo = new ToDo();
 		toDo.setLabel("Read the document");
 
