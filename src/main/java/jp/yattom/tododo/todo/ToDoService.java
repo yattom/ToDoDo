@@ -21,6 +21,13 @@ public class ToDoService {
     }
 
     public void saveToDo(ToDo target) {
+        if(!isNotDuplicate(target)) {
+            throw new IllegalStateException("duplicated todo");
+        }
         repository.save(target);
+    }
+
+    public boolean isNotDuplicate(ToDo target) {
+        return repository.countByLabel(target.getLabel()) == 0;
     }
 }

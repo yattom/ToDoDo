@@ -14,4 +14,6 @@ public interface ToDoRepository extends JpaRepository<ToDo, Integer> {
 
     @Override
     void deleteAll();
+
+    int countByLabel(String label);
 }
