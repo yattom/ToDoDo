@@ -6,13 +6,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.any;
 
-import java.util.Arrays;
 import java.util.List;
+
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @Transactional
@@ -27,10 +26,13 @@ public class CreateTests {
 
         // テスト用のヘルパー
         // ToDoをDB上に作成する
+        // ヘルパーは別クラスに入れるほうがよいかもしれないが、
+        // 一方、「このテストケース内だけ」で閉じると、見通しがよい＝コードが読みやすい
+        // 共通化したりまとめたり、過剰にしないように気を付ける
         void prepareToDos(String... labels) {
-            for(int i = 0; i < labels.length; i++) {
+            for (String label : labels) {
                 ToDo todo = new ToDo();
-                todo.setLabel(labels[i]);
+                todo.setLabel(label);
                 repo.save(todo);
             }
         }
