@@ -29,8 +29,7 @@ class ToDoDoApplicationTests {
 	@Test
 	public void ToDoを書き込む() {
 		// 準備
-		ToDo toDo = new ToDo();
-		toDo.setLabel("Read the document");
+		ToDo toDo = new ToDo("Read the document");
 
 		// 実行
 		sut.saveToDo(toDo);

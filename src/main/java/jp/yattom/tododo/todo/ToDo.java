@@ -13,6 +13,13 @@ public class ToDo {
 
     private String label;
 
+    public ToDo() {
+    }
+
+    public ToDo(String label) {
+        this.label = label;
+    }
+
     public String getLabel() {
         return label;
     }

@@ -1,6 +1,5 @@
 package jp.yattom.tododo.todo;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
@@ -28,11 +28,12 @@ public class CreateTests {
         // ToDoをDB上に作成する
         // ヘルパーは別クラスに入れるほうがよいかもしれないが、
         // 一方、「このテストケース内だけ」で閉じると、見通しがよい＝コードが読みやすい
-        // 共通化したりまとめたり、過剰にしないように気を付ける
+        // 共通化したりまとめたり一般化したり、あまりしないように気を付ける
+        // ヘルパーを作るときには、テストを書く人が便利になるように考えて設計する
+        // テストを書く人自身が必要に応じて作るのがベストで、QAエンジニア(SET)が協力してもよい
         void prepareToDos(String... labels) {
             for (String label : labels) {
-                ToDo todo = new ToDo();
-                todo.setLabel(label);
+                ToDo todo = new ToDo(label);
                 repo.save(todo);
             }
         }
@@ -40,16 +41,15 @@ public class CreateTests {
         @Test
         public void 新規保存できる() {
             // 準備
-            ToDo target = new ToDo();
-            target.setLabel("My ToDo");
+            ToDo target = new ToDo("My ToDo");
 
             // 実行
             sut.createToDo(target);
 
             // 検証
             List<ToDo> actual = repo.findAll();
-            Assertions.assertEquals(1, actual.size());
-            Assertions.assertEquals("My ToDo", actual.get(0).getLabel());
+            assertEquals(1, actual.size());
+            assertEquals("My ToDo", actual.get(0).getLabel());
         }
 
         /*
@@ -62,19 +62,17 @@ public class CreateTests {
             @Test
             public void 重複する場合() {
                 prepareToDos("Duplicated Todo");
-                ToDo target = new ToDo();
-                target.setLabel("Duplicated ToDo");
+                ToDo target = new ToDo("Duplicated ToDo");
                 sut.createToDo(target);
-                Assertions.assertThrows(IllegalStateException.class, () -> {
+                assertThrows(IllegalStateException.class, () -> {
                     sut.createToDo(target);
                 });
             }
 
             @Test
             public void 重複しない場合() {
-                ToDo target = new ToDo();
-                target.setLabel("Non Duplicated ToDo");
-                Assertions.assertDoesNotThrow(() -> {
+                ToDo target = new ToDo("Non Duplicated ToDo");
+                assertDoesNotThrow(() -> {
                     sut.createToDo(target);
                 });
             }
@@ -96,17 +94,15 @@ public class CreateTests {
             @Test
             public void 重複する場合() {
                 when(repo.countByLabel(any())).thenReturn(1);
-                ToDo target = new ToDo();
-                target.setLabel("Duplicated ToDo");
-                Assertions.assertFalse(sut.isNotDuplicate(target));
+                ToDo target = new ToDo("Duplicated ToDo");
+                assertFalse(sut.isNotDuplicate(target));
             }
 
             @Test
             public void 重複しない場合() {
                 when(repo.countByLabel(any())).thenReturn(0);
-                ToDo target = new ToDo();
-                target.setLabel("Non Duplicated ToDo");
-                Assertions.assertTrue(sut.isNotDuplicate(target));
+                ToDo target = new ToDo("Non Duplicated ToDo");
+                assertTrue(sut.isNotDuplicate(target));
             }
         }
     }
