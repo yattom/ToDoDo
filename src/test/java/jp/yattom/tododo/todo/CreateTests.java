@@ -22,9 +22,14 @@ import static org.mockito.Mockito.when;
     この例では、ToDo新規作成の結合テストとユニットテストを@Nestedを使って1ファイルに書いている
     (長くなりやすいので、分離するルールの方がいいかも)
     結合テスト(＝DBを使うテスト)、ユニットテストなどは、@Tagを使って整理するとよさそう
+
+    テストのクラス名、メソッド(テストケース)名、階層構造は、テスト内容を把握する上で重要
+    テスト結果の見た目をレビュー対象とし、テストが十分か、把握できるか、整理されているか評価する
  */
 @SpringBootTest
 @Transactional
+// クラス名を日本語にすると環境で問題が起きるかも
+// そういうときは @DisplayNameを使う
 @DisplayName("ToDo新規作成")
 public class CreateTests {
     @Nested
